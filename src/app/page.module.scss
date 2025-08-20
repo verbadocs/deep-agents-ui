@@ -2,10 +2,18 @@
 
 .container {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
   background-color: var(--color-surface);
   overflow: hidden;
+}
+
+.contentWrapper {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  margin-top: 64px; /* Account for fixed AppBar height */
 }
 
 .mainContent {

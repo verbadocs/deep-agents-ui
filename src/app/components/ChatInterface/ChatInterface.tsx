@@ -183,6 +183,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
 
     return (
       <div className={styles.container}>
+        {/* Existing Header */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <img
@@ -213,12 +214,12 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
             onThreadSelect={handleThreadSelect}
           />
           <div className={styles.messagesContainer}>
-            {!hasMessages && !isLoading && !isLoadingThreadState && (
+            {/* {!hasMessages && !isLoading && !isLoadingThreadState && (
               <div className={styles.emptyState}>
                 <Bot size={48} className={styles.emptyIcon} />
                 <h2>Start a conversation or select a thread from history</h2>
               </div>
-            )}
+            )} */}
             {isLoadingThreadState && (
               <div className={styles.threadLoadingState}>
                 <LoaderCircle className={styles.threadLoadingSpinner} />
@@ -249,7 +250,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
+            placeholder="Describe your new feature..."
             disabled={isLoading}
             className={styles.input}
           />
