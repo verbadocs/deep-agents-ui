@@ -37,7 +37,22 @@ const MermaidChart = ({ code }: { code: string }) => {
 export const MarkdownContent = React.memo<MarkdownContentProps>(
   ({ content, className = "" }) => {
     useEffect(() => {
-      mermaid.initialize({ startOnLoad: false });
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "dark",
+        themeVariables: {
+          darkMode: true,
+          primaryColor: "#000000",
+          primaryTextColor: "#ffffff",
+          primaryBorderColor: "#ffffff",
+          lineColor: "#ffffff",
+          secondaryColor: "#333333",
+          tertiaryColor: "#666666",
+          background: "#000000",
+          surface: "#000000",
+          surfaceText: "#ffffff",
+        },
+      });
     }, []);
 
     return (

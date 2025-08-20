@@ -125,10 +125,15 @@
   .mermaidChart {
     margin: $spacing-md 0;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     svg {
       max-width: 100%;
       height: auto;
+      display: block;
+      margin: 0 auto;
     }
   }
 }
