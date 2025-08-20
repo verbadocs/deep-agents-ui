@@ -121,4 +121,14 @@
       border: 1px solid var(--color-border);
     }
   }
+
+  .mermaidChart {
+    margin: $spacing-md 0;
+    text-align: center;
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+  }
 }

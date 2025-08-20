@@ -20,6 +20,24 @@ interface ToolCallBoxProps {
 export const ToolCallBox = React.memo<ToolCallBoxProps>(({ toolCall }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Hardcoded mapping for tool names
+  const getDisplayName = (toolName: string): string => {
+    const nameMapping: Record<string, string> = {
+      // Add your custom mappings here
+      write_file: "Writing File",
+      read_file: "Reading File",
+      edit_file: "Editing File",
+      generate_phase_transition_message: "Proceeding to next planning stage...",
+      rag_search: "Code search & grep",
+      write_todos: "Creating tasks",
+      generate_feedback_suggestions: "Suggesting Feedback",
+      task: "Task",
+      // Add more mappings as needed
+    };
+
+    return nameMapping[toolName] || toolName;
+  };
+
   const { name, args, result, status } = useMemo(() => {
     const toolName = toolCall.name || "Unknown Tool";
     const toolArgs = toolCall.args || "{}";
@@ -34,7 +52,7 @@ export const ToolCallBox = React.memo<ToolCallBoxProps>(({ toolCall }) => {
     const toolStatus = toolCall.status || "completed";
 
     return {
-      name: toolName,
+      name: getDisplayName(toolName), // Apply the mapping here
       args: parsedArgs,
       result: toolResult,
       status: toolStatus,

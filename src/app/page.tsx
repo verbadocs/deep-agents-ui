@@ -59,7 +59,7 @@ export default function HomePage() {
 
   // Mock user data for the header
   const user = {
-    userId: "user123",
+    userId: "b881e320-c031-700f-d05a-421ae259f727",
     username: "User",
   };
 

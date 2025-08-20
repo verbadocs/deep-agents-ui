@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import mermaid from "mermaid";
 import styles from "./MarkdownContent.module.scss";
 
 interface MarkdownContentProps {
@@ -12,8 +13,33 @@ interface MarkdownContentProps {
   className?: string;
 }
 
+// Simple Mermaid component
+const MermaidChart = ({ code }: { code: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [uniqueId] = useState(
+    () => `mermaid-${Math.random().toString(36).substr(2, 9)}`
+  );
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.innerHTML = "";
+      mermaid.render(uniqueId, code).then(({ svg }) => {
+        if (containerRef.current) {
+          containerRef.current.innerHTML = svg;
+        }
+      });
+    }
+  }, [code, uniqueId]);
+
+  return <div ref={containerRef} className={styles.mermaidChart} />;
+};
+
 export const MarkdownContent = React.memo<MarkdownContentProps>(
   ({ content, className = "" }) => {
+    useEffect(() => {
+      mermaid.initialize({ startOnLoad: false });
+    }, []);
+
     return (
       <div className={`${styles.markdown} ${className}`}>
         <ReactMarkdown
@@ -21,6 +47,11 @@ export const MarkdownContent = React.memo<MarkdownContentProps>(
           components={{
             code({ node, inline, className, children, ...props }: any) {
               const match = /language-(\w+)/.exec(className || "");
+
+              if (match && match[1] === "mermaid") {
+                return <MermaidChart code={String(children)} />;
+              }
+
               return !inline && match ? (
                 <SyntaxHighlighter
                   style={oneDark as any}
@@ -77,7 +108,7 @@ export const MarkdownContent = React.memo<MarkdownContentProps>(
         </ReactMarkdown>
       </div>
     );
-  },
+  }
 );
 
 MarkdownContent.displayName = "MarkdownContent";
