@@ -7,9 +7,9 @@ import {
   FileText,
   Folder,
   FolderOpen,
-  CheckCircle,
-  Circle,
-  Clock,
+  // CheckCircle,
+  // Circle,
+  // Clock,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -27,24 +27,24 @@ interface TasksFilesSidebarProps {
 
 export const TasksFilesSidebar = React.memo<TasksFilesSidebarProps>(
   ({ todos, files, onFileClick, collapsed, onToggleCollapse }) => {
-    const getStatusIcon = useCallback((status: TodoItem["status"]) => {
-      switch (status) {
-        case "completed":
-          return <CheckCircle size={16} className={styles.completedIcon} />;
-        case "in_progress":
-          return <Clock size={16} className={styles.progressIcon} />;
-        default:
-          return <Circle size={16} className={styles.pendingIcon} />;
-      }
-    }, []);
+    // const getStatusIcon = useCallback((status: TodoItem["status"]) => {
+    //   switch (status) {
+    //     case "completed":
+    //       return <CheckCircle size={16} className={styles.completedIcon} />;
+    //     case "in_progress":
+    //       return <Clock size={16} className={styles.progressIcon} />;
+    //     default:
+    //       return <Circle size={16} className={styles.pendingIcon} />;
+    //   }
+    // }, []);
 
-    const groupedTodos = useMemo(() => {
-      return {
-        pending: todos.filter((t) => t.status === "pending"),
-        in_progress: todos.filter((t) => t.status === "in_progress"),
-        completed: todos.filter((t) => t.status === "completed"),
-      };
-    }, [todos]);
+    // const groupedTodos = useMemo(() => {
+    //   return {
+    //     pending: todos.filter((t) => t.status === "pending"),
+    //     in_progress: todos.filter((t) => t.status === "in_progress"),
+    //     completed: todos.filter((t) => t.status === "completed"),
+    //   };
+    // }, [todos]);
 
     if (collapsed) {
       return (
@@ -74,17 +74,17 @@ export const TasksFilesSidebar = React.memo<TasksFilesSidebarProps>(
             <ChevronLeft size={20} />
           </Button>
         </div>
-        <Tabs defaultValue="tasks" className={styles.tabs}>
+        <Tabs defaultValue="files" className={styles.tabs}>
           <TabsList className={styles.tabsList}>
-            <TabsTrigger value="tasks" className={styles.tabTrigger}>
+            {/* <TabsTrigger value="tasks" className={styles.tabTrigger}>
               Tasks ({todos.length})
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger value="files" className={styles.tabTrigger}>
               Files ({Object.keys(files).length})
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="tasks" className={styles.tabContent}>
+          {/* <TabsContent value="tasks" className={styles.tabContent}>
             <ScrollArea className={styles.scrollArea}>
               {todos.length === 0 ? (
                 <div className={styles.emptyState}>
@@ -136,7 +136,7 @@ export const TasksFilesSidebar = React.memo<TasksFilesSidebarProps>(
                 </div>
               )}
             </ScrollArea>
-          </TabsContent>
+          </TabsContent> */}
 
           <TabsContent value="files" className={styles.tabContent}>
             <ScrollArea className={styles.scrollArea}>
@@ -166,7 +166,7 @@ export const TasksFilesSidebar = React.memo<TasksFilesSidebarProps>(
         </Tabs>
       </div>
     );
-  },
+  }
 );
 
 TasksFilesSidebar.displayName = "TasksFilesSidebar";

@@ -15,7 +15,7 @@ export default function HomePage() {
   const { session } = useAuthContext();
   const [threadId, setThreadId] = useQueryState("threadId");
   const [selectedSubAgent, setSelectedSubAgent] = useState<SubAgent | null>(
-    null,
+    null
   );
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [todos, setTodos] = useState<TodoItem[]>([]);
@@ -67,6 +67,19 @@ export default function HomePage() {
     setFiles({});
   }, [setThreadId]);
 
+  const handleFileSave = useCallback((filePath: string, content: string) => {
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      [filePath]: content,
+    }));
+
+    // Close the file dialog
+    setSelectedFile(null);
+
+    // TODO: Optionally send the updated file to the backend/thread state
+    // This would require implementing an API call to update the thread state
+  }, []);
+
   return (
     <div className={styles.container}>
       <TasksFilesSidebar
@@ -98,6 +111,7 @@ export default function HomePage() {
         <FileViewDialog
           file={selectedFile}
           onClose={() => setSelectedFile(null)}
+          onFileSave={handleFileSave}
         />
       )}
     </div>
