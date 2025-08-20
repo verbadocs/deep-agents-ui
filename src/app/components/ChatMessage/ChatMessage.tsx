@@ -53,13 +53,13 @@ export const ChatMessage = React.memo<ChatMessageProps>(
     useEffect(() => {
       if (
         subAgents.some(
-          (subAgent: SubAgent) => subAgent.id === selectedSubAgent?.id,
+          (subAgent: SubAgent) => subAgent.id === selectedSubAgent?.id
         )
       ) {
         onSelectSubAgent(
           subAgents.find(
-            (subAgent: SubAgent) => subAgent.id === selectedSubAgent?.id,
-          )!,
+            (subAgent: SubAgent) => subAgent.id === selectedSubAgent?.id
+          )!
         );
       }
     }, [selectedSubAgent, onSelectSubAgent, subAgentsString]);
@@ -75,7 +75,11 @@ export const ChatMessage = React.memo<ChatMessageProps>(
             (isUser ? (
               <User className={styles.avatarIcon} />
             ) : (
-              <Bot className={styles.avatarIcon} />
+              <img
+                src="/verba-logo.svg"
+                alt="Assistant"
+                className={styles.avatarIcon}
+              />
             ))}
         </div>
         <div className={styles.content}>
@@ -110,7 +114,7 @@ export const ChatMessage = React.memo<ChatMessageProps>(
         </div>
       </div>
     );
-  },
+  }
 );
 
 ChatMessage.displayName = "ChatMessage";

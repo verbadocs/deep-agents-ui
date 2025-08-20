@@ -37,11 +37,11 @@
 
     .avatar {
       margin-top: $spacing-md;
-      background-color: var(--color-avatar-bg);
+      background-color: transparent;
     }
 
     .avatarIcon {
-      color: var(--color-secondary);
+      color: white;
     }
   }
 }
@@ -64,6 +64,13 @@
 .avatarIcon {
   width: 16px;
   height: 16px;
+
+  // For SVG images, ensure they scale properly
+  &[src*=".svg"] {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
 }
 
 .content {

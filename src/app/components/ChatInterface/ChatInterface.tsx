@@ -23,7 +23,7 @@ interface ChatInterfaceProps {
   threadId: string | null;
   selectedSubAgent: SubAgent | null;
   setThreadId: (
-    value: string | ((old: string | null) => string | null) | null,
+    value: string | ((old: string | null) => string | null) | null
   ) => void;
   onSelectSubAgent: (subAgent: SubAgent) => void;
   onTodosUpdate: (todos: TodoItem[]) => void;
@@ -51,7 +51,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
       threadId,
       setThreadId,
       onTodosUpdate,
-      onFilesUpdate,
+      onFilesUpdate
     );
 
     useEffect(() => {
@@ -66,7 +66,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
         sendMessage(messageText);
         setInput("");
       },
-      [input, isLoading, sendMessage],
+      [input, isLoading, sendMessage]
     );
 
     const handleNewThread = useCallback(() => {
@@ -83,7 +83,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
         setThreadId(id);
         setIsThreadHistoryOpen(false);
       },
-      [setThreadId],
+      [setThreadId]
     );
 
     const toggleThreadHistory = useCallback(() => {
@@ -110,12 +110,12 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
           } else if (message.tool_calls && Array.isArray(message.tool_calls)) {
             toolCallsInMessage.push(
               ...message.tool_calls.filter(
-                (toolCall: any) => toolCall.name !== "",
-              ),
+                (toolCall: any) => toolCall.name !== ""
+              )
             );
           } else if (Array.isArray(message.content)) {
             const toolUseBlocks = message.content.filter(
-              (block: any) => block.type === "tool_use",
+              (block: any) => block.type === "tool_use"
             );
             toolCallsInMessage.push(...toolUseBlocks);
           }
@@ -137,7 +137,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                 args,
                 status: "pending" as const,
               } as ToolCall;
-            },
+            }
           );
           messageMap.set(message.id!, {
             message,
@@ -150,7 +150,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
           }
           for (const [, data] of messageMap.entries()) {
             const toolCallIndex = data.toolCalls.findIndex(
-              (tc: any) => tc.id === toolCallId,
+              (tc: any) => tc.id === toolCallId
             );
             if (toolCallIndex === -1) {
               continue;
@@ -185,8 +185,11 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <Bot className={styles.logo} />
-            <h1 className={styles.title}>Deep Agents</h1>
+            <img
+              src="/verba.svg"
+              alt="Deep Agents Logo"
+              className={styles.logoImage}
+            />
           </div>
           <div className={styles.headerRight}>
             <Button
@@ -270,7 +273,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
         </form>
       </div>
     );
-  },
+  }
 );
 
 ChatInterface.displayName = "ChatInterface";

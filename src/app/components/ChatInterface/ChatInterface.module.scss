@@ -22,19 +22,14 @@
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: $spacing-md;
 }
 
-.logo {
-  width: 24px;
-  height: 24px;
-  color: var(--color-primary);
-}
-
-.title {
-  font-size: $font-size-xl;
-  font-weight: $font-weight-semibold;
-  margin: 0;
+.logoImage {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .headerRight {
