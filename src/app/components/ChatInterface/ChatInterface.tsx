@@ -185,13 +185,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
       <div className={styles.container}>
         {/* Existing Header */}
         <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <img
-              src="/verba.svg"
-              alt="Deep Agents Logo"
-              className={styles.logoImage}
-            />
-          </div>
+          <div className={styles.headerLeft}></div>
           <div className={styles.headerRight}>
             <Button
               variant="ghost"

@@ -64,7 +64,7 @@ export const TasksFilesSidebar = React.memo<TasksFilesSidebarProps>(
     return (
       <div className={styles.sidebar}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Workspace</h2>
+          <h2 className={styles.title}>File System</h2>
           <Button
             variant="ghost"
             size="sm"

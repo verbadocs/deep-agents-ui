@@ -3,7 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   background-color: var(--color-background);
 }
@@ -168,20 +168,67 @@
 
 .input {
   flex: 1;
-  padding-left: 10px;
+  padding: $spacing-md $spacing-lg;
+  border-radius: 24px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  resize: none;
+  min-height: 48px;
+  max-height: 200px;
+  transition: all $transition-base;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
 }
 
 .sendButton {
-  padding: $spacing-sm $spacing-md;
+  padding: $spacing-md;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-base;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
 }
 
 .stopButton {
-  padding: $spacing-sm $spacing-md;
+  padding: $spacing-md;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   background-color: var(--color-error);
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-base;
 
   &:hover {
-    opacity: 0.9;
+    background-color: var(--color-error-hover);
+    transform: scale(1.05);
   }
 }
 
