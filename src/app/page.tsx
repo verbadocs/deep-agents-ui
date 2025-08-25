@@ -466,6 +466,7 @@ export default function HomePage() {
             onFilesUpdate={setFiles}
             onNewThread={handleNewThread}
             isLoadingThreadState={isLoadingThreadState}
+            currentFiles={files}
           />
           {selectedSubAgent && (
             <SubAgentPanel
