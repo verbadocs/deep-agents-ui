@@ -59,12 +59,26 @@ export function useChat(
   });
 
   const sendMessage = useCallback(
-    (message: string) => {
+    async (message: string) => {
       const humanMessage: Message = {
         id: uuidv4(),
         type: "human",
         content: message,
       };
+      
+      // Get the latest thread state to ensure we use the most recent checkpoint
+      let latestCheckpoint = null;
+      if (threadId && accessToken) {
+        try {
+          const client = createClient(accessToken);
+          const currentState = await client.threads.getState(threadId);
+          latestCheckpoint = currentState.checkpoint;
+          console.log("Using checkpoint for message:", latestCheckpoint?.checkpoint_id);
+        } catch (error) {
+          console.warn("Could not get latest checkpoint:", error);
+        }
+      }
+      
       stream.submit(
         { messages: [humanMessage] },
         {
@@ -75,11 +89,15 @@ export function useChat(
           },
           config: {
             recursion_limit: 100,
+            configurable: latestCheckpoint ? {
+              checkpoint_id: latestCheckpoint.checkpoint_id,
+              checkpoint_ns: latestCheckpoint.checkpoint_ns || "",
+            } : undefined,
           },
         },
       );
     },
-    [stream],
+    [stream, threadId, accessToken],
   );
 
   const stopStream = useCallback(() => {

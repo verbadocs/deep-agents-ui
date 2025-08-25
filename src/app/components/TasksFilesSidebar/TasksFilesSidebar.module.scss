@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 .sidebar {
   width: $sidebar-width;
@@ -34,6 +34,7 @@
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
   margin: 0;
+  color: var(--color-text-primary);
 }
 
 .toggleButton {
@@ -70,6 +71,7 @@
   border-radius: $radius-sm;
   background: transparent;
   transition: all $transition-base;
+  color: var(--color-text-primary);
 
   &[data-state="active"] {
     background-color: var(--color-background);
@@ -82,7 +84,7 @@
 
     &:hover {
       color: var(--color-text-primary);
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: var(--color-border-light);
     }
   }
 }

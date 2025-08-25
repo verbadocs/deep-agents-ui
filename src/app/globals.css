@@ -1,65 +1,100 @@
 @import "tailwindcss";
 
 :root {
-  /* App-specific color variables */
-  --color-primary: #1c3c3c;
-  --color-user-message: #076699;
-  --color-avatar-bg: #ebe8fe;
-  --color-secondary: #1c3c3c;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-background: #f9f9f9;
-  --color-subagent-hover: #d0c9fe;
-  --color-surface: #f9fafb;
-  --color-border: #e5e7eb;
-  --color-border-light: #f3f4f6;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-tertiary: #9ca3af;
+  /* App-specific color variables - Inverted colors */
+  --color-primary: #2dd4bf;
+  --color-primary-hover: #14b8a6;
+  --color-user-message: #0ea5e9;
+  --color-avatar-bg: #4c1d95;
+  --color-secondary: #2dd4bf;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-error-hover: #ef4444;
+  --color-background: #ffffff; /* Changed from #0f0f0f to #ffffff */
+  --color-subagent-hover: #6d28d9;
+  --color-surface: #ffffff; /* Changed from #1a1a1a to #ffffff */
+  --color-border: #d2d2d2; /* Changed from #2d2d2d to #d2d2d2 */
+  --color-border-light: #e5e5e5; /* Changed from #232323 to #e5e5e5 */
+  --color-text-primary: #000000; /* Changed from #f3f4f6 to #000000 */
+  --color-text-secondary: #333333; /* Changed from #9ca3af to #333333 */
+  --color-text-tertiary: #666666; /* Changed from #6b7280 to #666666 */
 
-  /* Tailwind/Radix UI component variables */
-  --background: #f9f9f9;
-  --foreground: #111827;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
-  --primary: #1c3c3c;
-  --primary-foreground: #ffffff;
-  --input: #e5e7eb;
-  --ring: #1c3c3c;
-  --destructive: #ef4444;
+  /* Tailwind/Radix UI component variables for inverted theme */
+  --background: #ffffff; /* Changed from #0f0f0f to #ffffff */
+  --foreground: #000000; /* Changed from #f3f4f6 to #000000 */
+  --muted: #e5e5e5; /* Changed from #232323 to #e5e5e5 */
+  --muted-foreground: #666666; /* Changed from #9ca3af to #666666 */
+  --primary: #2dd4bf;
+  --primary-foreground: #ffffff; /* Changed from #0f0f0f to #ffffff */
+  --input: #ffffff; /* Changed from #2d2d2d to #ffffff */
+  --ring: #2dd4bf;
+  --destructive: #f87171;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Light theme - only apply when explicitly needed */
+@media (prefers-color-scheme: light) {
   :root {
-    /* App-specific color variables */
-    --color-primary: #2dd4bf;
-    --color-user-message: #0ea5e9;
-    --color-avatar-bg: #4c1d95;
-    --color-secondary: #2dd4bf;
-    --color-success: #34d399;
-    --color-warning: #fbbf24;
-    --color-error: #f87171;
-    --color-background: #0f0f0f;
-    --color-subagent-hover: #6d28d9;
-    --color-surface: #1a1a1a;
-    --color-border: #2d2d2d;
-    --color-border-light: #232323;
-    --color-text-primary: #f3f4f6;
-    --color-text-secondary: #9ca3af;
-    --color-text-tertiary: #6b7280;
+    /* App-specific color variables for light mode (now dark) */
+    --color-primary: #1c3c3c;
+    --color-primary-hover: #0f2a2a;
+    --color-user-message: #076699;
+    --color-avatar-bg: #ebe8fe;
+    --color-secondary: #1c3c3c;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-error-hover: #dc2626;
+    --color-background: #0f0f0f; /* Changed from #f9f9f9 to #0f0f0f */
+    --color-subagent-hover: #d0c9fe;
+    --color-surface: #1a1a1a; /* Changed from #f9fafb to #1a1a1a */
+    --color-border: #2d2d2d; /* Changed from #e5e7eb to #2d2d2d */
+    --color-border-light: #232323; /* Changed from #f3f4f6 to #232323 */
+    --color-text-primary: #f3f4f6; /* Changed from #111827 to #f3f4f6 */
+    --color-text-secondary: #9ca3af; /* Changed from #6b7280 to #9ca3af */
+    --color-text-tertiary: #6b7280; /* Changed from #9ca3af to #6b7280 */
 
-    /* Tailwind/Radix UI component variables for dark mode */
-    --background: #0f0f0f;
-    --foreground: #f3f4f6;
-    --muted: #232323;
-    --muted-foreground: #9ca3af;
-    --primary: #2dd4bf;
-    --primary-foreground: #0f0f0f;
-    --input: #2d2d2d;
-    --ring: #2dd4bf;
-    --destructive: #f87171;
+    /* Tailwind/Radix UI component variables for light mode (now dark) */
+    --background: #0f0f0f; /* Changed from #f9f9f9 to #0f0f0f */
+    --foreground: #f3f4f6; /* Changed from #111827 to #f3f4f6 */
+    --muted: #232323; /* Changed from #f3f4f6 to #232323 */
+    --muted-foreground: #6b7280; /* Changed from #6b7280 to #6b7280 */
+    --primary: #1c3c3c;
+    --primary-foreground: #000000; /* Changed from #ffffff to #000000 */
+    --input: #2d2d2d; /* Changed from #e5e7eb to #2d2d2d */
+    --ring: #1c3c3c;
+    --destructive: #ef4444;
   }
+}
+
+/* Force dark mode for this app */
+body {
+  color-scheme: dark;
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Force dark theme on all elements */
+* {
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Override specific elements that might have conflicting styles */
+div,
+section,
+main,
+aside {
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Force sidebar and content areas to use dark theme */
+.sidebar,
+.mainContent,
+.contentWrapper {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
 }
 
 @theme inline {
