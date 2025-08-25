@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Send, Bot, LoaderCircle, SquarePen, History, X } from "lucide-react";
 import { ChatMessage } from "../ChatMessage/ChatMessage";
 import { ThreadHistorySidebar } from "../ThreadHistorySidebar/ThreadHistorySidebar";
+import { ParsingInterface } from "../ParsingInterface/ParsingInterface";
 import type { SubAgent, TodoItem, ToolCall } from "../../types/types";
 import { useChat } from "../../hooks/useChat";
 import styles from "./ChatInterface.module.scss";
@@ -187,6 +188,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
         <div className={styles.header}>
           <div className={styles.headerLeft}></div>
           <div className={styles.headerRight}>
+            <ParsingInterface />
             <Button
               variant="ghost"
               size="icon"

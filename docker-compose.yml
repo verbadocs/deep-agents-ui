@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  deep-agents-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      # Add your deployment URL and agent ID here
+      - NEXT_PUBLIC_DEPLOYMENT_URL=http://your-backend-url:2024
+      - NEXT_PUBLIC_AGENT_ID=deepagent
+    restart: unless-stopped
+    # Optional: Add health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

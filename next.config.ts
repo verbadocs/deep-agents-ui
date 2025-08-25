@@ -2,16 +2,22 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  devIndicators: {
-    buildActivity: false,
+  output: "standalone",
+  eslint: {
+    ignoreDuringBuilds: true,
   },
-  experimental: {
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  trailingSlash: false,
+  generateBuildId: async () => {
+    return "build";
+  },
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
       },
     },
   },

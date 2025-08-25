@@ -1,0 +1,255 @@
+@use "../../styles/variables" as *;
+
+.dialogContent {
+  max-width: 800px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.tabs {
+  width: 100%;
+}
+
+.tabsList {
+  display: flex;
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.tabTrigger {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--background-hover);
+    color: var(--text-primary);
+  }
+
+  &[data-state="active"] {
+    background: var(--primary-color);
+    color: white;
+  }
+}
+
+.tabContent {
+  padding: 0;
+}
+
+.indexSection,
+.querySection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-color);
+    }
+  }
+}
+
+.indexButton,
+.queryButton {
+  align-self: flex-start;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.statusSection {
+  margin-bottom: 16px;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+
+  &.hasData {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border: 1px solid var(--success-border);
+  }
+
+  &.noData {
+    background: var(--warning-bg);
+    color: var(--warning-text);
+    border: 1px solid var(--warning-border);
+  }
+}
+
+.progressSection {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--background-secondary);
+  border-radius: 8px;
+
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.progressList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.progressItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  background: var(--background-primary);
+
+  &.info {
+    border-left: 3px solid var(--info-color);
+  }
+
+  &.error {
+    border-left: 3px solid var(--error-color);
+  }
+
+  &.complete {
+    border-left: 3px solid var(--success-color);
+  }
+
+  .timestamp {
+    color: var(--text-tertiary);
+    font-size: 12px;
+  }
+
+  .message {
+    color: var(--text-primary);
+  }
+}
+
+.resultSection {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--background-secondary);
+  border-radius: 8px;
+
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.answer {
+  padding: 12px;
+  background: var(--background-primary);
+  border-radius: 6px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.sourcesSection {
+  margin-top: 16px;
+
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.sourcesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sourceItem {
+  padding: 12px;
+  background: var(--background-primary);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.sourceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sourceFile {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.sourceScore {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  background: var(--background-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.sourceContent {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.4;
+  max-height: 100px;
+  overflow-y: auto;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
