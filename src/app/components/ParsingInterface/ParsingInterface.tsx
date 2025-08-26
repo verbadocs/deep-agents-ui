@@ -3,9 +3,22 @@
 import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LoaderCircle, Github, Search, FileText, Database, CheckCircle } from "lucide-react";
+import {
+  LoaderCircle,
+  Github,
+  Search,
+  FileText,
+  Database,
+  CheckCircle,
+} from "lucide-react";
 import styles from "./ParsingInterface.module.scss";
 
 interface ParsingInterfaceProps {
@@ -30,10 +43,11 @@ interface QueryResult {
   }>;
 }
 
-export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({ 
-  parsingUiUrl = process.env.NEXT_PUBLIC_PARSING_UI_URL || "http://localhost:3001",
+export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
+  parsingUiUrl = process.env.NEXT_PUBLIC_PARSING_UI_URL ||
+    "http://localhost:3001",
   userId,
-  onRepoIndexed
+  onRepoIndexed,
 }) => {
   const [isIndexing, setIsIndexing] = useState(false);
   const [isQuerying, setIsQuerying] = useState(false);
@@ -43,7 +57,9 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
   const [enhanced, setEnhanced] = useState(false);
   const [progress, setProgress] = useState<IndexingProgress[]>([]);
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
-  const [status, setStatus] = useState<{ hasIndexedRepositories: boolean } | null>(null);
+  const [status, setStatus] = useState<{
+    hasIndexedRepositories: boolean;
+  } | null>(null);
   const [indexingComplete, setIndexingComplete] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -63,10 +79,12 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
   }, [parsingUiUrl]);
 
   // Extract owner and repo from GitHub URL
-  const extractRepoInfo = (url: string): { owner: string; name: string } | null => {
+  const extractRepoInfo = (
+    url: string
+  ): { owner: string; name: string } | null => {
     const match = url.match(/github\.com[\/:]([^\/]+)\/([^\/\s\.]+)/);
     if (match) {
-      return { owner: match[1], name: match[2].replace(/\.git$/, '') };
+      return { owner: match[1], name: match[2].replace(/\.git$/, "") };
     }
     return null;
   };
@@ -74,24 +92,24 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
   // Persist indexed repo to database
   const persistIndexedRepo = async (owner: string, name: string) => {
     try {
-      const response = await fetch('/api/repos', {
-        method: 'POST',
+      const response = await fetch("/api/repos", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': userId,
+          "Content-Type": "application/json",
+          "x-user-id": userId,
         },
         body: JSON.stringify({
           repo_owner: owner,
           repo_name: name,
           metadata: {
-            indexed_via: 'parsing_interface',
-            indexed_at: new Date().toISOString()
-          }
+            indexed_via: "parsing_interface",
+            indexed_at: new Date().toISOString(),
+          },
         }),
       });
-      
+
       if (!response.ok) {
-        console.error('Failed to persist indexed repo');
+        console.error("Failed to persist indexed repo");
       } else {
         // Call the callback if provided
         if (onRepoIndexed) {
@@ -99,7 +117,7 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
         }
       }
     } catch (error) {
-      console.error('Error persisting indexed repo:', error);
+      console.error("Error persisting indexed repo:", error);
     }
   };
 
@@ -124,24 +142,24 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
 
       // Set up WebSocket connection for progress updates
       const ws = new WebSocket(`ws://${parsingUiUrl.replace("http://", "")}`);
-      
+
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          setProgress(prev => [...prev, data]);
-          
+          setProgress((prev) => [...prev, data]);
+
           if (data.type === "complete") {
             setIndexingComplete(true);
             setIsIndexing(false);
             ws.close();
             checkStatus(); // Refresh status
-            
+
             // Extract and persist repo info
             const repoInfo = extractRepoInfo(githubUrl);
             if (repoInfo) {
               persistIndexedRepo(repoInfo.owner, repoInfo.name);
             }
-            
+
             // Auto-close dialog after 3 seconds
             setTimeout(() => {
               setIsOpen(false);
@@ -156,28 +174,36 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
         } catch (error) {
           // Silently ignore malformed WebSocket messages to prevent noise
           if (event.data && event.data.trim()) {
-            console.debug("Ignoring malformed WebSocket message:", event.data.slice(0, 100));
+            console.debug(
+              "Ignoring malformed WebSocket message:",
+              event.data.slice(0, 100)
+            );
           }
         }
       };
 
       ws.onerror = () => {
         setIsIndexing(false);
-        setProgress(prev => [...prev, { 
-          type: "error", 
-          message: "WebSocket connection failed", 
-          timestamp: new Date().toISOString() 
-        }]);
+        setProgress((prev) => [
+          ...prev,
+          {
+            type: "error",
+            message: "WebSocket connection failed",
+            timestamp: new Date().toISOString(),
+          },
+        ]);
       };
-
     } catch (error) {
       console.error("Indexing failed:", error);
       setIsIndexing(false);
-      setProgress(prev => [...prev, { 
-        type: "error", 
-        message: error instanceof Error ? error.message : "Unknown error", 
-        timestamp: new Date().toISOString() 
-      }]);
+      setProgress((prev) => [
+        ...prev,
+        {
+          type: "error",
+          message: error instanceof Error ? error.message : "Unknown error",
+          timestamp: new Date().toISOString(),
+        },
+      ]);
     }
   }, [githubUrl, accessToken, parsingUiUrl, checkStatus]);
 
@@ -202,8 +228,8 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
       setQueryResult(result);
     } catch (error) {
       console.error("Query failed:", error);
-      setQueryResult({ 
-        answer: `Error: ${error instanceof Error ? error.message : "Unknown error"}` 
+      setQueryResult({
+        answer: `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
       });
     } finally {
       setIsQuerying(false);
@@ -222,17 +248,17 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
         <DialogHeader>
           <DialogTitle>Repository Parser & Query</DialogTitle>
         </DialogHeader>
-        
+
         <Tabs defaultValue="index" className={styles.tabs}>
           <TabsList className={styles.tabsList}>
             <TabsTrigger value="index" className={styles.tabTrigger}>
               <Github size={16} className="mr-2" />
               Index Repository
             </TabsTrigger>
-            <TabsTrigger value="query" className={styles.tabTrigger}>
+            {/* <TabsTrigger value="query" className={styles.tabTrigger}>
               <Search size={16} className="mr-2" />
               Query Repository
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
 
           <TabsContent value="index" className={styles.tabContent}>
@@ -246,7 +272,7 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
                   disabled={isIndexing}
                 />
               </div>
-              
+
               <div className={styles.inputGroup}>
                 <label>GitHub Access Token (optional):</label>
                 <Input
@@ -258,8 +284,8 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
                 />
               </div>
 
-              <Button 
-                onClick={handleIndexRepo} 
+              <Button
+                onClick={handleIndexRepo}
                 disabled={!githubUrl.trim() || isIndexing}
                 className={styles.indexButton}
               >
@@ -281,7 +307,10 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
                   <h4>Progress:</h4>
                   <div className={styles.progressList}>
                     {progress.map((item, index) => (
-                      <div key={index} className={`${styles.progressItem} ${styles[item.type]}`}>
+                      <div
+                        key={index}
+                        className={`${styles.progressItem} ${styles[item.type]}`}
+                      >
                         <span className={styles.timestamp}>
                           {new Date(item.timestamp).toLocaleTimeString()}
                         </span>
@@ -295,7 +324,10 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
               {indexingComplete && (
                 <div className={styles.successIndicator}>
                   <CheckCircle className={styles.successIcon} size={24} />
-                  <span>Repository indexed successfully! Dialog will close automatically...</span>
+                  <span>
+                    Repository indexed successfully! Dialog will close
+                    automatically...
+                  </span>
                 </div>
               )}
             </div>
@@ -305,7 +337,9 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
             <div className={styles.querySection}>
               {status && (
                 <div className={styles.statusSection}>
-                  <div className={`${styles.statusIndicator} ${status.hasIndexedRepositories ? styles.hasData : styles.noData}`}>
+                  <div
+                    className={`${styles.statusIndicator} ${status.hasIndexedRepositories ? styles.hasData : styles.noData}`}
+                  >
                     {status.hasIndexedRepositories ? (
                       <>
                         <Database size={16} className="mr-2" />
@@ -343,8 +377,8 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
                 </label>
               </div>
 
-              <Button 
-                onClick={handleQuery} 
+              <Button
+                onClick={handleQuery}
                 disabled={!question.trim() || isQuerying}
                 className={styles.queryButton}
               >
@@ -365,7 +399,7 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
                 <div className={styles.resultSection}>
                   <h4>Answer:</h4>
                   <div className={styles.answer}>{queryResult.answer}</div>
-                  
+
                   {queryResult.sources && queryResult.sources.length > 0 && (
                     <div className={styles.sourcesSection}>
                       <h4>Sources:</h4>
@@ -373,10 +407,16 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
                         {queryResult.sources.map((source, index) => (
                           <div key={index} className={styles.sourceItem}>
                             <div className={styles.sourceHeader}>
-                              <span className={styles.sourceFile}>{source.file}</span>
-                              <span className={styles.sourceScore}>Score: {source.score.toFixed(2)}</span>
+                              <span className={styles.sourceFile}>
+                                {source.file}
+                              </span>
+                              <span className={styles.sourceScore}>
+                                Score: {source.score.toFixed(2)}
+                              </span>
                             </div>
-                            <div className={styles.sourceContent}>{source.content}</div>
+                            <div className={styles.sourceContent}>
+                              {source.content}
+                            </div>
                           </div>
                         ))}
                       </div>
