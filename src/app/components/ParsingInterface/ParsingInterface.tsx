@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LoaderCircle, Github, Search, FileText, Database } from "lucide-react";
+import { LoaderCircle, Github, Search, FileText, Database, CheckCircle } from "lucide-react";
 import styles from "./ParsingInterface.module.scss";
 
 interface ParsingInterfaceProps {
@@ -40,6 +40,8 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
   const [progress, setProgress] = useState<IndexingProgress[]>([]);
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
   const [status, setStatus] = useState<{ hasIndexedRepositories: boolean } | null>(null);
+  const [indexingComplete, setIndexingComplete] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Check status on mount
   React.useEffect(() => {
@@ -61,6 +63,7 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
 
     setIsIndexing(true);
     setProgress([]);
+    setIndexingComplete(false);
 
     try {
       // Start indexing
@@ -82,7 +85,19 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
           const data = JSON.parse(event.data);
           setProgress(prev => [...prev, data]);
           
-          if (data.type === "error" || data.type === "complete") {
+          if (data.type === "complete") {
+            setIndexingComplete(true);
+            setIsIndexing(false);
+            ws.close();
+            checkStatus(); // Refresh status
+            
+            // Auto-close dialog after 3 seconds
+            setTimeout(() => {
+              setIsOpen(false);
+              setIndexingComplete(false);
+              setProgress([]);
+            }, 3000);
+          } else if (data.type === "error") {
             ws.close();
             setIsIndexing(false);
             checkStatus(); // Refresh status
@@ -142,9 +157,9 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
   }, [question, enhanced, parsingUiUrl]);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
           <Database size={16} className="mr-2" />
           Repository Parser
         </Button>
@@ -220,6 +235,13 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {indexingComplete && (
+                <div className={styles.successIndicator}>
+                  <CheckCircle className={styles.successIcon} size={24} />
+                  <span>Repository indexed successfully! Dialog will close automatically...</span>
                 </div>
               )}
             </div>

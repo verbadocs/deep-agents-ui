@@ -1,10 +1,11 @@
 @use "../../styles/variables" as *;
 
 .dialogContent {
-  max-width: 800px;
+  max-width: 900px;
   width: 90vw;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow-y: auto;
+  padding: 24px;
 }
 
 .tabs {
@@ -53,7 +54,8 @@
 .querySection {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  padding: 16px 0;
 }
 
 .inputGroup {
@@ -123,16 +125,49 @@
 }
 
 .progressSection {
-  margin-top: 16px;
-  padding: 16px;
+  margin-top: 20px;
+  padding: 20px;
   background: var(--background-secondary);
-  border-radius: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
 
   h4 {
-    margin: 0 0 12px 0;
+    margin: 0 0 16px 0;
     font-size: 16px;
     font-weight: 600;
     color: var(--text-primary);
+  }
+}
+
+.successIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  color: #155724;
+  font-weight: 600;
+  font-size: 16px;
+  animation: successFadeIn 0.5s ease-in-out;
+
+  .successIcon {
+    font-size: 24px;
+    color: #28a745;
+  }
+}
+
+@keyframes successFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
