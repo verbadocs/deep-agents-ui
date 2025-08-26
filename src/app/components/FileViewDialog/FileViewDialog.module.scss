@@ -55,9 +55,11 @@
   gap: $spacing-xs;
   padding: $spacing-xs $spacing-sm;
   margin-right: $spacing-xs;
+  color: var(--color-text-primary);
 
   &:hover {
     background-color: var(--color-border-light);
+    color: var(--color-text-primary);
   }
 }
 
