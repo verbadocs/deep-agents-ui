@@ -10,6 +10,8 @@ import styles from "./ParsingInterface.module.scss";
 
 interface ParsingInterfaceProps {
   parsingUiUrl?: string;
+  userId: string;
+  onRepoIndexed?: (owner: string, name: string) => void;
 }
 
 interface IndexingProgress {
@@ -29,7 +31,9 @@ interface QueryResult {
 }
 
 export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({ 
-  parsingUiUrl = process.env.NEXT_PUBLIC_PARSING_UI_URL || "http://localhost:3001" 
+  parsingUiUrl = process.env.NEXT_PUBLIC_PARSING_UI_URL || "http://localhost:3001",
+  userId,
+  onRepoIndexed
 }) => {
   const [isIndexing, setIsIndexing] = useState(false);
   const [isQuerying, setIsQuerying] = useState(false);
@@ -57,6 +61,47 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
       console.error("Failed to check status:", error);
     }
   }, [parsingUiUrl]);
+
+  // Extract owner and repo from GitHub URL
+  const extractRepoInfo = (url: string): { owner: string; name: string } | null => {
+    const match = url.match(/github\.com[\/:]([^\/]+)\/([^\/\s\.]+)/);
+    if (match) {
+      return { owner: match[1], name: match[2].replace(/\.git$/, '') };
+    }
+    return null;
+  };
+
+  // Persist indexed repo to database
+  const persistIndexedRepo = async (owner: string, name: string) => {
+    try {
+      const response = await fetch('/api/repos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': userId,
+        },
+        body: JSON.stringify({
+          repo_owner: owner,
+          repo_name: name,
+          metadata: {
+            indexed_via: 'parsing_interface',
+            indexed_at: new Date().toISOString()
+          }
+        }),
+      });
+      
+      if (!response.ok) {
+        console.error('Failed to persist indexed repo');
+      } else {
+        // Call the callback if provided
+        if (onRepoIndexed) {
+          onRepoIndexed(owner, name);
+        }
+      }
+    } catch (error) {
+      console.error('Error persisting indexed repo:', error);
+    }
+  };
 
   const handleIndexRepo = useCallback(async () => {
     if (!githubUrl.trim()) return;
@@ -90,6 +135,12 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
             setIsIndexing(false);
             ws.close();
             checkStatus(); // Refresh status
+            
+            // Extract and persist repo info
+            const repoInfo = extractRepoInfo(githubUrl);
+            if (repoInfo) {
+              persistIndexedRepo(repoInfo.owner, repoInfo.name);
+            }
             
             // Auto-close dialog after 3 seconds
             setTimeout(() => {
