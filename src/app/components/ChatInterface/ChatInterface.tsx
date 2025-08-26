@@ -103,24 +103,34 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
     3. For each tool message, find the corresponding tool call in the messageMap and update the status and output
     */
       const messageMap = new Map<string, any>();
-      messages.forEach((message: Message) => {
+      console.log("Processing messages:", messages.length, "messages");
+      messages.forEach((message: Message, index: number) => {
+        console.log(`Message ${index}:`, {
+          type: message.type,
+          id: message.id,
+          name: message.name || 'no-name',
+          hasToolCalls: !!(message.tool_calls && message.tool_calls.length > 0),
+          hasAdditionalKwargs: !!(message.additional_kwargs && Object.keys(message.additional_kwargs).length > 0),
+          contentPreview: typeof message.content === 'string' ? message.content.slice(0, 100) : 'non-string-content'
+        });
         if (message.type === "ai") {
           const toolCallsInMessage: any[] = [];
           if (
             message.additional_kwargs?.tool_calls &&
             Array.isArray(message.additional_kwargs.tool_calls)
           ) {
+            console.log("Found tool calls in additional_kwargs:", message.additional_kwargs.tool_calls);
             toolCallsInMessage.push(...message.additional_kwargs.tool_calls);
           } else if (message.tool_calls && Array.isArray(message.tool_calls)) {
-            toolCallsInMessage.push(
-              ...message.tool_calls.filter(
-                (toolCall: any) => toolCall.name !== ""
-              )
-            );
+            console.log("Found tool calls in tool_calls:", message.tool_calls);
+            toolCallsInMessage.push(...message.tool_calls);
           } else if (Array.isArray(message.content)) {
             const toolUseBlocks = message.content.filter(
               (block: any) => block.type === "tool_use"
             );
+            if (toolUseBlocks.length > 0) {
+              console.log("Found tool use blocks in content:", toolUseBlocks);
+            }
             toolCallsInMessage.push(...toolUseBlocks);
           }
           const toolCallsWithStatus = toolCallsInMessage.map(
@@ -149,6 +159,11 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
           });
         } else if (message.type === "tool") {
           const toolCallId = message.tool_call_id;
+          console.log("Processing tool message:", {
+            toolCallId,
+            name: message.name,
+            contentPreview: message.content?.slice(0, 200)
+          });
           if (!toolCallId) {
             return;
           }

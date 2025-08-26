@@ -103,7 +103,10 @@ export const ParsingInterface: React.FC<ParsingInterfaceProps> = ({
             checkStatus(); // Refresh status
           }
         } catch (error) {
-          console.error("Failed to parse progress message:", error);
+          // Silently ignore malformed WebSocket messages to prevent noise
+          if (event.data && event.data.trim()) {
+            console.debug("Ignoring malformed WebSocket message:", event.data.slice(0, 100));
+          }
         }
       };
 
