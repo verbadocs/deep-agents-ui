@@ -101,6 +101,7 @@ export function useChat(
                 configurable: {
                   checkpoint_id: currentState.checkpoint?.checkpoint_id,
                   checkpoint_ns: currentState.checkpoint?.checkpoint_ns || "",
+                  user_id: userId,
                 },
               },
             },
@@ -122,6 +123,9 @@ export function useChat(
               },
               config: {
                 recursion_limit: 100,
+                configurable: {
+                  user_id: userId,
+                },
               },
             },
           );
@@ -142,6 +146,9 @@ export function useChat(
             },
             config: {
               recursion_limit: 100,
+              configurable: {
+                user_id: userId,
+              },
             },
           },
         );
