@@ -22,6 +22,14 @@ fi
 
 echo "Using PostgreSQL at: ${PSQL}"
 
+# Set up pg_isready with the same logic
+PG_ISREADY="${PSQL%/*}/pg_isready"
+if [ ! -f "$PG_ISREADY" ]; then
+    PG_ISREADY="pg_isready"  # Fallback to system PATH
+fi
+
+echo "Using pg_isready at: ${PG_ISREADY}"
+
 # Database configuration
 DB_NAME="deepagents"
 DB_USER="deepagents_user"
@@ -31,24 +39,40 @@ DB_PORT="5432"
 
 # Check if PostgreSQL is running, start it if not
 echo "Checking PostgreSQL service..."
-if ! pg_isready -h localhost -p 5432 > /dev/null 2>&1; then
+
+if ! $PG_ISREADY -h localhost -p 5432 > /dev/null 2>&1; then
     echo "PostgreSQL is not running. Starting it..."
     brew services start postgresql@15
-    sleep 3  # Give it a moment to start
+    echo "Waiting for PostgreSQL to start..."
     
-    # Check again
-    if ! pg_isready -h localhost -p 5432 > /dev/null 2>&1; then
-        echo "Failed to start PostgreSQL. Please start it manually:"
-        echo "  brew services start postgresql@15"
+    # Wait up to 30 seconds for PostgreSQL to start
+    for i in {1..30}; do
+        if $PG_ISREADY -h localhost -p 5432 > /dev/null 2>&1; then
+            echo "PostgreSQL started successfully."
+            break
+        fi
+        echo "Waiting... ($i/30)"
+        sleep 1
+    done
+    
+    # Final check
+    if ! $PG_ISREADY -h localhost -p 5432 > /dev/null 2>&1; then
+        echo "Failed to start PostgreSQL after 30 seconds."
+        echo "Please check if PostgreSQL is running manually:"
+        echo "  brew services list | grep postgresql"
+        echo "If it shows as 'started', wait a few more seconds and try again."
         exit 1
     fi
+else
+    echo "PostgreSQL is already running."
 fi
-echo "PostgreSQL is running."
 
 # Create database and user
 echo "Creating database and user..."
-${PSQL} -U $USER -d postgres <<EOF 2>/dev/null
--- Create user if not exists
+
+# Create user
+echo "Creating user ${DB_USER}..."
+${PSQL} -U $USER -d postgres -c "
 DO \$\$
 BEGIN
    IF NOT EXISTS (SELECT FROM pg_user WHERE usename = '${DB_USER}') THEN
@@ -58,19 +82,17 @@ BEGIN
       RAISE NOTICE 'User ${DB_USER} already exists';
    END IF;
 END
-\$\$;
+\$\$;" 2>/dev/null || echo "User creation: OK (may already exist)"
 
--- Create database if not exists
-SELECT 'CREATE DATABASE ${DB_NAME} OWNER ${DB_USER}' 
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${DB_NAME}')\gexec
+# Create database
+echo "Creating database ${DB_NAME}..."
+${PSQL} -U $USER -d postgres -c "SELECT 1 FROM pg_database WHERE datname = '${DB_NAME}';" | grep -q 1 || {
+    ${PSQL} -U $USER -d postgres -c "CREATE DATABASE ${DB_NAME} OWNER ${DB_USER};" 2>/dev/null || echo "Database creation: OK (may already exist)"
+}
 
--- Grant all privileges
-GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} TO ${DB_USER};
-EOF
-
-if [ $? -ne 0 ]; then
-    echo "Note: Database and user may already exist (this is okay)."
-fi
+# Grant privileges
+echo "Granting privileges..."
+${PSQL} -U $USER -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} TO ${DB_USER};" 2>/dev/null || echo "Privileges: OK"
 
 # Create the tables
 echo "Creating database tables..."

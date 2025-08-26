@@ -21,6 +21,7 @@ export function useChat(
   onTodosUpdate: (todos: TodoItem[]) => void,
   onFilesUpdate: (files: Record<string, string>) => void,
   currentFiles?: Record<string, string>,
+  userId?: string,
 ) {
   const deployment = useMemo(() => getDeployment(), []);
   const { session } = useAuthContext();
@@ -56,6 +57,7 @@ export function useChat(
     onThreadId: setThreadId,
     defaultHeaders: {
       "x-auth-scheme": "langsmith",
+      ...(userId && { "x-user-id": userId }),
     },
   });
 

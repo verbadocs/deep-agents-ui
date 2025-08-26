@@ -59,7 +59,8 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
       setThreadId,
       onTodosUpdate,
       onFilesUpdate,
-      currentFiles
+      currentFiles,
+      userId
     );
 
     useEffect(() => {
