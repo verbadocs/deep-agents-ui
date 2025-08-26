@@ -143,18 +143,68 @@ export default function HomePage() {
     setFiles({});
   }, [setThreadId]);
 
-  const handleFileSave = useCallback((filePath: string, content: string) => {
-    setFiles((prevFiles) => ({
-      ...prevFiles,
+  const handleFileSave = useCallback(async (filePath: string, content: string) => {
+    // Update local state immediately for UI responsiveness
+    const updatedFiles = {
+      ...files,
       [filePath]: content,
-    }));
+    };
+    setFiles(updatedFiles);
 
     // Close the file dialog
     setSelectedFile(null);
 
-    // TODO: Optionally send the updated file to the backend/thread state
-    // This would require implementing an API call to update the thread state
-  }, []);
+    // Sync the updated file to the backend thread state
+    if (threadId && session?.accessToken) {
+      try {
+        const client = createClient(session.accessToken);
+        
+        // KEY INSIGHT: Based on the backend code, the files state uses a file_reducer
+        // that merges files. We need to update as if the agent's write_file tool did it.
+        // The reducer function: {**l, **r} merges the existing files with new ones.
+        
+        // Get current state to understand the checkpoint
+        const currentState = await client.threads.getState(threadId);
+        console.log("Current state before update:", {
+          checkpoint: currentState.checkpoint,
+          next: currentState.next,
+          filesCount: Object.keys((currentState.values as any)?.files || {}).length
+        });
+        
+        // Update state at the current checkpoint to ensure continuity
+        const updateResult = await client.threads.updateState(threadId, {
+          values: {
+            files: { [filePath]: content }, // Update only the changed file, reducer will merge
+          },
+          // Don't specify asNode - let it update at the current checkpoint
+        });
+        
+        console.log("Update result:", updateResult);
+        
+        // Verify the update
+        const verifyState = await client.threads.getState(threadId);
+        const verifiedFiles = (verifyState.values as any)?.files || {};
+        
+        console.log("Verification after update:", {
+          allFiles: Object.keys(verifiedFiles),
+          updatedFileContent: verifiedFiles[filePath]?.substring(0, 100) + "...",
+          checkpoint: verifyState.checkpoint,
+          next: verifyState.next,
+          configurable: updateResult.configurable,
+        });
+        
+        toast.success(`File ${filePath} synced to agent state`);
+        
+      } catch (error) {
+        console.error("Failed to sync file to thread state:", error);
+        console.error("Error details:", error);
+        toast.error("Failed to sync file changes to agent");
+        
+        // Revert the local change on error
+        setFiles(files);
+      }
+    }
+  }, [threadId, session?.accessToken, files]);
 
   return (
     <div className={styles.container}>
@@ -416,6 +466,7 @@ export default function HomePage() {
             onFilesUpdate={setFiles}
             onNewThread={handleNewThread}
             isLoadingThreadState={isLoadingThreadState}
+            currentFiles={files}
           />
           {selectedSubAgent && (
             <SubAgentPanel

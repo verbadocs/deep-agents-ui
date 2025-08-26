@@ -96,6 +96,8 @@ export const FileViewDialog = React.memo<FileViewDialogProps>(
     const handleSave = useCallback(() => {
       if (onFileSave) {
         onFileSave(file.path, editedContent);
+        // Update the file object to reflect the new content
+        file.content = editedContent;
       }
       setIsEditing(false);
     }, [onFileSave, file.path, editedContent]);

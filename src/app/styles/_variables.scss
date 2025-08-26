@@ -1,28 +1,28 @@
-// Light theme colors
-$color-primary: #1c3c3c;
-$color-user-message: #076699;
-$color-avatar-bg: #ebe8fe;
-$color-secondary: #1c3c3c;
-$color-success: #10b981;
-$color-warning: #f59e0b;
-$color-error: #ef4444;
-$color-background: #f9f9f9;
-$color-subagent-hover: #d0c9fe;
-$color-surface: #f9fafb;
-$color-border: #e5e7eb;
-$color-border-light: #f3f4f6;
-$color-text-primary: #111827;
-$color-text-secondary: #6b7280;
-$color-text-tertiary: #9ca3af;
+// Inverted colors (default)
+$color-primary: #2dd4bf;
+$color-user-message: #0ea5e9;
+$color-avatar-bg: #4c1d95;
+$color-secondary: #2dd4bf;
+$color-success: #34d399;
+$color-warning: #fbbf24;
+$color-error: #f87171;
+$color-background: #ffffff;
+$color-subagent-hover: #6d28d9;
+$color-surface: #ffffff;
+$color-border: #d2d2d2;
+$color-border-light: #e5e5e5;
+$color-text-primary: #000000;
+$color-text-secondary: #333333;
+$color-text-tertiary: #666666;
 
-// Dark theme colors
-$color-primary-dark: #2dd4bf;
+// Dark theme colors (for when explicitly needed)
+$color-primary-dark: #1c3c3c;
 $color-user-message-dark: #076699;
-$color-avatar-bg-dark: #bcb2fd;
-$color-secondary-dark: #2dd4bf;
-$color-success-dark: #34d399;
-$color-warning-dark: #fbbf24;
-$color-error-dark: #f87171;
+$color-avatar-bg-dark: #ebe8fe;
+$color-secondary-dark: #1c3c3c;
+$color-success-dark: #10b981;
+$color-warning-dark: #f59e0b;
+$color-error-dark: #ef4444;
 $color-background-dark: #0f0f0f;
 $color-subagent-hover-dark: #d0c9fe;
 $color-surface-dark: #1a1a1a;
