@@ -58,11 +58,24 @@ export default function HomePage() {
   const open = Boolean(anchorElFeedback);
   const menuOpen = Boolean(anchorElAccount);
 
-  // Mock user data for the header
-  const user = {
-    userId: "b881e320-c031-700f-d05a-421ae259f727",
-    username: "User",
-  };
+  // Generate a unique user ID per browser/machine
+  const [user] = useState(() => {
+    // Try to get existing user ID from localStorage
+    let userId = localStorage.getItem('deep-agents-user-id');
+    
+    if (!userId) {
+      // Generate a new unique user ID and store it
+      userId = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('deep-agents-user-id', userId);
+    }
+    
+    console.log("Frontend using user ID:", userId);
+    
+    return {
+      userId: userId,
+      username: "User",
+    };
+  });
 
   // Material-UI header handlers
   const handleClickAccount = (event: React.MouseEvent<HTMLElement>) => {
