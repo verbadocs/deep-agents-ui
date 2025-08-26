@@ -6,6 +6,7 @@ import { ChatInterface } from "./components/ChatInterface/ChatInterface";
 import { TasksFilesSidebar } from "./components/TasksFilesSidebar/TasksFilesSidebar";
 import { SubAgentPanel } from "./components/SubAgentPanel/SubAgentPanel";
 import { FileViewDialog } from "./components/FileViewDialog/FileViewDialog";
+import { IndexedReposDropdown } from "./components/IndexedReposDropdown/IndexedReposDropdown";
 import { createClient } from "@/lib/client";
 import { useAuthContext } from "@/providers/Auth";
 import type { SubAgent, FileItem, TodoItem } from "./types/types";
@@ -417,8 +418,15 @@ export default function HomePage() {
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
+          
+          <IndexedReposDropdown 
+            userId={user.userId}
+            onRefresh={() => {
+              // Will be called when component mounts to expose refresh function
+            }}
+          />
 
-          <Box columnGap={2} display={"flex"} alignItems={"center"}>
+          <Box columnGap={2} display={"flex"} alignItems={"center"} ml={2}>
             <MuiButton
               variant="outlined"
               sx={{ color: "white" }}
@@ -467,6 +475,13 @@ export default function HomePage() {
             onNewThread={handleNewThread}
             isLoadingThreadState={isLoadingThreadState}
             currentFiles={files}
+            userId={user.userId}
+            onRepoIndexed={() => {
+              // Trigger refresh of indexed repos dropdown
+              if ((window as any).refreshIndexedRepos) {
+                (window as any).refreshIndexedRepos();
+              }
+            }}
           />
           {selectedSubAgent && (
             <SubAgentPanel

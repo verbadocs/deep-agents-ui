@@ -32,6 +32,8 @@ interface ChatInterfaceProps {
   onNewThread: () => void;
   isLoadingThreadState: boolean;
   currentFiles: Record<string, string>;
+  userId: string;
+  onRepoIndexed?: () => void;
 }
 
 export const ChatInterface = React.memo<ChatInterfaceProps>(
@@ -45,6 +47,8 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
     onNewThread,
     isLoadingThreadState,
     currentFiles,
+    userId,
+    onRepoIndexed,
   }) => {
     const [input, setInput] = useState("");
     const [isThreadHistoryOpen, setIsThreadHistoryOpen] = useState(false);
@@ -191,7 +195,13 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
         <div className={styles.header}>
           <div className={styles.headerLeft}></div>
           <div className={styles.headerRight}>
-            <ParsingInterface />
+            <ParsingInterface 
+              userId={userId}
+              onRepoIndexed={(owner, name) => {
+                console.log(`Repo indexed: ${owner}/${name}`);
+                if (onRepoIndexed) onRepoIndexed();
+              }}
+            />
             <Button
               variant="ghost"
               size="icon"
