@@ -94,10 +94,9 @@ export const ChatMessage = React.memo<ChatMessageProps>(
           )}
           {hasToolCalls && (
             <div className={styles.toolCalls}>
-              {toolCalls.map((toolCall: ToolCall) => {
-                if (toolCall.name === "task") return null;
-                return <ToolCallBox key={toolCall.id} toolCall={toolCall} />;
-              })}
+              {toolCalls.map((toolCall: ToolCall) => (
+                <ToolCallBox key={toolCall.id} toolCall={toolCall} />
+              ))}
             </div>
           )}
           {!isUser && subAgents.length > 0 && (

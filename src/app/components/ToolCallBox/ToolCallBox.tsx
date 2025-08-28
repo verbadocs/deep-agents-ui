@@ -28,10 +28,11 @@ export const ToolCallBox = React.memo<ToolCallBoxProps>(({ toolCall }) => {
       read_file: "Reading File",
       edit_file: "Editing File",
       generate_phase_transition_message: "Proceeding to next planning stage...",
-      rag_search: "Code search & grep",
+      rag_search: "Code search & grep", 
       write_todos: "Creating tasks",
       generate_feedback_suggestions: "Suggesting Feedback",
-      task: "Task",
+      task: "Task Agent",
+      Task: "Task Agent",
       // Add more mappings as needed
     };
 
