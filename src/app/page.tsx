@@ -59,24 +59,33 @@ export default function HomePage() {
   const menuOpen = Boolean(anchorElAccount);
 
   // Generate a unique user ID per browser/machine
-  const [user] = useState(() => {
-    // Try to get existing user ID from localStorage
-    let userId = localStorage.getItem("deep-agents-user-id");
-
-    if (!userId) {
-      // Generate a new unique user ID and store it
-      userId =
-        "user-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem("deep-agents-user-id", userId);
-    }
-
-    console.log("Frontend using user ID:", userId);
-
-    return {
-      userId: userId,
-      username: "User",
-    };
+  const [user, setUser] = useState({
+    userId: "temp-" + Date.now(), // Temporary ID for SSR
+    username: "User",
   });
+
+  // Update user ID on client side after hydration
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window !== 'undefined') {
+      // Try to get existing user ID from localStorage
+      let userId = localStorage.getItem('deep-agents-user-id');
+      
+      if (!userId) {
+        // Generate a new unique user ID and store it
+        userId = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('deep-agents-user-id', userId);
+      }
+      
+      console.log("Frontend using user ID:", userId);
+      
+      // Update the user state with the actual user ID
+      setUser({
+        userId: userId,
+        username: "User",
+      });
+    }
+  }, []); // Empty dependency array - run once after mount
 
   // Material-UI header handlers
   const handleClickAccount = (event: React.MouseEvent<HTMLElement>) => {
